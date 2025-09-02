@@ -9,7 +9,14 @@ const userSchema = new mongoose.Schema({
     phone: {type: String},
     avatar: {type: String},
     bio: {type: String},
-    role: {type: String, enum: ['admin', 'organizer', 'user'], default: 'user'},
+    role: {type: String, enum: ['admin', 'organizer', 'attendee'], default: 'attendee'},
+    isEmailVerified: {type: Boolean, default: false}, // Email verification
+    isPhoneVerified: {type: Boolean, default: false}, // Phone verification
+    preferences: {
+        emailNotifications: {type: Boolean, default: true},
+        smsNotifications: {type: Boolean, default: false},
+        eventReminders: {type: Boolean, default: true}
+    },
     events: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
     tickets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Ticket'}],
     createdEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
@@ -32,6 +39,7 @@ const userSchema = new mongoose.Schema({
         createdAt: {type: Date, default: Date.now, expires: '7d'} // Tokens expire after 7 days
     }],
     teams: [{type: mongoose.Schema.Types.ObjectId, ref: 'Team'}],
+    attendedEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}], // Events attended
 }, {timestamps: true});
 
 module.exports = mongoose.model('User', userSchema);
